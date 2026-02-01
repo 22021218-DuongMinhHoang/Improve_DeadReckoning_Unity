@@ -1,0 +1,3 @@
+[submodule "rocketrally"]
+	path = rocketrally
+	url = https://github.com/22021218-DuongMinhHoang/multiplayer-videogame-relay-netcode.git
