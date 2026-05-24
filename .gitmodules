@@ -1,3 +1,6 @@
 [submodule "rocketrally"]
 	path = rocketrally
 	url = https://github.com/22021218-DuongMinhHoang/multiplayer-videogame-relay-netcode.git
+[submodule "references/Unity-Multiplayer-Kart"]
+	path = references/Unity-Multiplayer-Kart
+	url = https://github.com/adammyhre/Unity-Multiplayer-Kart
