@@ -5,35 +5,49 @@ Dead Reckoning là kỹ thuật dự đoán và nội suy trạng thái dựa tr
 
 Khóa luận nghiên cứu và cài đặt hệ thống phương pháp đề xuất nhằm cải tiến và khắc phục những vấn đề còn tồn động trong kỹ thuật Dead Reckoning.
 
-## Vấn đề của Dead Reckoning
-Dead Reckoning cơ bản còn tồn đọng một số vấn đề sau:
+Khóa luận sử dụng game MissileRally để cài đặt phương pháp đề xuất.
+Ban đầu game MissileRally chỉ có Dead Reckoning cơ bản.
 
-- Hạ tầng thời gian và lưu trữ trạng thái:
-  - Kỹ thuật dự đoán giả định rằng thời điểm nhận trạng thái từ Server là thời điểm diễn ra trạng thái đấy mà không xét tới độ trễ mạng
-  - Chưa có đồng bộ thời gian giữa Client và Server, dẫn tới thiếu đồng bộ trạng thái trên hệ thống
-  - Chưa có cơ chế lưu trữ trạng thái để có thể hỗ trợ các kỹ thuật tua ngược để đồng bộ trạng thái giữa Client và Server
-- Cơ chế dự đoán và nội suy:
-  - Kỹ thuật cơ bản vẫn đang dùng mô hình dự đoán dựa trên chuyển động thẳng đều, dự đoán sẽ thiếu chính xác nếu vật thể di chuyển với vận tốc thay đổi liên tục
-  - Kỹ thuật chưa có cơ chế thích ứng với độ trễ mạng không ổn định, ngưỡng sai số cố định có thể dẫn tới vấn đề mất cân bằng giữa độ chính xác và độ mượt chuyển động
-  - Nội suy tuyến tính không đem lại sự mượt mà trong chuyển động do kỹ thuật này không dữ được quán tính chuyển động
-- Input từ người chơi và các tương tác quan trọng:
-  - Dead Reckoning không phù hợp với dự đoán và nội suy chuyển động cho vật thể do người chơi điều khiển, lí do là vì người chơi rất khó đoán
-  - Các tương tác quan trọng đôi khi cũng có thể bị bỏ qua do độ lệch giữa trạng thái hiển thị trên Client và trạng thái thực sự trên Server
+## Chức năng cài đặt
 
-## Phương pháp đề xuất
-Khóa luận đề xuất và cài đặt hệ thống cải tiến Dead Reckoning:
+Các chức năng được cài đặt bao gồm:
+- Dead Reckoning cơ bản:
+  - Dự đoán bằng mô hình dự đoán bậc một
+  - Nội suy tuyến tính
+- Dead Reckoning cải tiến:
+  - Server gửi thêm thông tin timestamp để Client dự đoán
+  - NetworkTimer hỗ trợ đồng bộ tần suất cập nhật khung hình giữa Client và Server
+  - CircularBuffer là bộ đệm xoay vòng giúp lưu trữ input và trạng thái theo tick
+  - Dự đoán bằng mô hình bậc hai
+  - Thay đổi ngưỡng sai số tối đa để thích ứng với độ trễ mạng biến thiên
+  - Nội suy làm mượt chuyển động bằng SmoothDamp
+- Kỹ thuật bổ trợ:
+  - Client-side Prediction và Server Reconciliation hỗ trợ Client phản ứng ngay lập tức với input của người chơi thay vì phải đợi phản hồi từ Server
+  - Lag Compensation hỗ trợ Server xác nhận input tương tác từ quá khứ để đảm bảo không bị bỏ qua tương tác quan trọng
+- Giao diện hỗ trợ kiểm chứng độ hiệu quả của phương pháp đề xuất.
 
-- Hạ tầng thời gian và lưu trữ trạng thái:
-  - Mỗi gói tin từ Server sẽ có thêm timestamp, Client từ đó sẽ có thể dự đoán trạng thái thực chính xác hơn
-  - Client và Server sẽ có tần suất cập nhật khung hình cố định giống nhau, từ đó đảm bảo đồng bộ khi lưu trữ trạng thái trên hệ thống
-  - Bộ đệm xoay vòng để lưu trữ trạng thái, đảm bảo không tốn nhiều dung lượng cho các thông tin đã cũ
-- Cơ chế dự đoán và nội suy:
-  - Mô hình dự đoán dựa trên chuyển động thẳng biến đổi đều giúp dự đoán chính xác hơn
-  - Cơ chế thích ứng ngưỡng sai số với độ trễ biến thiên, đảm bảo cân bằng giữa độ chính xác và độ mượt chuyển động
-  - Nội suy SmoothDamp dựa trên hệ lò xo giảm chấn tới hạn, đảm bảo quán tính trong quá trình chuyển động giúp vật di chuyển mượt mà
-- Input từ người chơi và các tương tác quan trọng:
-  - Kỹ thuật Client-side Prediction áp dụng ngay lập tức input từ người chơi mà không cần phải đợi phản hồi từ Server, từ đó giúp người chơi có thể nhận được phản hồi hiển thị ngay lập tức
-  - Kỹ thuật Server Reconciliation đảm bảo Client vẫn bám sát theo trạng thái thực từ Server, đảm bảo độ chính xác hiển thị
-  - Lag Compensation giúp quay ngược và mô phỏng lại input trong quá khứ để đảm bảo không có tương tác nào bị bỏ qua
- 
-## 
+## Cách chạy code
+
+Môi trường: Unity 2022.3 LTS
+
+Quy trình chạy code:
+- Tải mã nguồn về, giải nén và mở bằng Unity
+- Cài đặt package ParrelSync
+- Sử dụng ParrelSync để tạo bản sao của Editor hiện tại
+- Mở bản sao vừa tạo
+- Chạy game trên cả hai Editor
+- Một Editor đóng vai trò là người chơi Host sẽ nhấn nút Host trên màn hình chính
+- Một Editor đóng vai trò là người chơi Guest sẽ nhấn nút Join trên màn hình chính
+- Khi cả hai người chơi đã vào phòng chờ thì cả hai nhấn Ready
+- Cuộc đua bắt đầu, cả hai xe cố đi hết một vòng quanh đường đua trong thời gian ngắn nhất
+
+## Cách chạy bản build demo
+
+Quy trình chạy bản build demo:
+- Tải bản release MissileRally từ github
+- Giải nén và chạy từ 2 đến 4 chương trình game bằng MissileRally.exe
+- Một người chơi đóng vai trò Host sẽ nhấn nút Host trên màn hình chính
+- Các người chơi còn lại là Guest sẽ nhấn nút Join trên màn hình chính
+- Khi các người choi đã vào phòng chờ thì nhấn Ready
+- Cuộc đua bắt đầu, các xe cố đi hết một vòng quanh đường đua trong thời gian ngắn nhất
+
