@@ -51,3 +51,7 @@ Quy trình chạy bản build demo:
 - Khi các người choi đã vào phòng chờ thì nhấn Ready
 - Cuộc đua bắt đầu, các xe cố đi hết một vòng quanh đường đua trong thời gian ngắn nhất
 
+## Tài liệu tham khảo
+- references/Accuracy in Dead-Reckoning Based DistributedMulti-Player Games: tham khảo TimeStamp
+- references/Unity-Multiplayer-Kart: tham khảo NetworkTimer và CircularBuffer
+- [Fast-Paced Multiplayer](https://www.gabrielgambetta.com/client-server-game-architecture.html): tham khảo logic Client-side Prediction, Server Reconciliation và Lag Compensation
